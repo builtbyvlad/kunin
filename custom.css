@@ -3,7 +3,7 @@
    The existing Webflow embed can stay as it is.
    Fonts must load inside the iframe; parent-page fonts are not inherited.
    Uses Ashby's public CSS hooks and verified field data attributes.
-   v13: 0.875rem feedback body copy; earlier state fixes retained.
+   v14: nested error-alert typography fix; earlier state fixes retained.
    No ID selectors or nested bare state pseudo-classes.
    Disabled, pressed, loading and field-error treatments
    extend the supplied default/hover/filled/error/success design states.
@@ -74,6 +74,7 @@
   --checkboxAndRadioDim: 1rem;
   --checkboxAndRadioCheckDim: 0.5rem;
 }
+
 
 html { font-size: 1rem; }
 @media screen and (max-width:1920px) { html { font-size: 1rem; } }
@@ -629,25 +630,25 @@ body .ashby-application-form-input-checkbox-group-option > span:has(> input:chec
 /* Keep the invalid border visible even while the field has focus. */
 body .ashby-application-form-container .ashby-application-form-input-text[aria-invalid="true"],
 body .ashby-application-form-container .ashby-application-form-input-text:user-invalid,
-body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-text:invalid,
+body .ashby-application-form-container:has([role="alert"][data-highlight="negative"]) .ashby-application-form-input-text:invalid,
 body .ashby-application-form-container .ashby-application-form-input-textarea[aria-invalid="true"],
 body .ashby-application-form-container .ashby-application-form-input-textarea:user-invalid,
-body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-textarea:invalid,
+body .ashby-application-form-container:has([role="alert"][data-highlight="negative"]) .ashby-application-form-input-textarea:invalid,
 body .ashby-application-form-container .ashby-application-form-input-autocomplete[aria-invalid="true"],
 body .ashby-application-form-container .ashby-application-form-input-autocomplete:user-invalid,
-body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-autocomplete:invalid,
+body .ashby-application-form-container:has([role="alert"][data-highlight="negative"]) .ashby-application-form-input-autocomplete:invalid,
 body .ashby-application-form-container .ashby-application-form-input-dropdown-select[aria-invalid="true"],
 body .ashby-application-form-container .ashby-application-form-input-dropdown-select:user-invalid,
-body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-dropdown-select:invalid,
+body .ashby-application-form-container:has([role="alert"][data-highlight="negative"]) .ashby-application-form-input-dropdown-select:invalid,
 body .ashby-application-form-container .ashby-application-form-input-date[aria-invalid="true"],
 body .ashby-application-form-container .ashby-application-form-input-date:user-invalid,
-body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-date:invalid {
+body .ashby-application-form-container:has([role="alert"][data-highlight="negative"]) .ashby-application-form-input-date:invalid {
   border-color: var(--kunin-red-30) !important;
 }
 
 body .ashby-application-form-input-file:has(input[aria-invalid="true"]),
 body .ashby-application-form-input-file:has(input:user-invalid),
-body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-file:has(input:invalid) {
+body .ashby-application-form-container:has([role="alert"][data-highlight="negative"]) .ashby-application-form-input-file:has(input:invalid) {
   border-color: var(--kunin-red-30) !important;
 }
 
@@ -791,7 +792,7 @@ body .ashby-application-form-autofill-input-form-alert,
 body .ashby-application-form-success-container,
 body .ashby-application-form-failure-container,
 body .ashby-application-form-blocked-application-container,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] {
   box-sizing: border-box;
   min-width: 0;
   border-radius: 0;
@@ -817,13 +818,13 @@ body .ashby-application-form-success-container {
 
 body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"],
 body .ashby-application-form-failure-container,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] {
   background: var(--kunin-error-surface);
   border: 1px solid var(--kunin-red-30) !important;
 }
 
 body .ashby-application-form-failure-container,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] {
   padding: 2.4375rem;
   margin: 0 0 2.5rem;
 }
@@ -849,10 +850,10 @@ body .ashby-application-form-blocked-application-container h1,
 body .ashby-application-form-blocked-application-container h2,
 body .ashby-application-form-blocked-application-container h3,
 body .ashby-application-form-blocked-application-container h4,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h1,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h2,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h3,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h4 {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] h1,
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] h2,
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] h3,
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] h4 {
   margin: 0 0 0.875rem;
   color: var(--kunin-cream);
   font: 400 0.875rem/1.2 var(--kunin-label-font);
@@ -880,11 +881,11 @@ body .ashby-application-form-blocked-application-container h2::before,
 body .ashby-application-form-blocked-application-container h3::before,
 body .ashby-application-form-blocked-application-container h4::before,
 body .ashby-application-form-blocked-application-container p::before,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h1::before,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h2::before,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h3::before,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h4::before,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] p::before {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] h1::before,
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] h2::before,
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] h3::before,
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] h4::before,
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] p::before {
   display: none;
 }
 
@@ -892,25 +893,25 @@ body .ashby-application-form-autofill-input-form-alert p,
 body .ashby-application-form-success-container p,
 body .ashby-application-form-failure-container p,
 body .ashby-application-form-blocked-application-container p,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] p {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] p {
   margin: 0;
   color: var(--kunin-white);
   font: 400 1.25rem/1.2 var(--kunin-body-font);
 }
 
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] ul {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] ul {
   margin: 0;
   padding-left: 1.5rem;
 }
 
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] li {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] li {
   margin: 0.5rem 0 0;
   font: inherit;
   color: inherit;
 }
 
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] a,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] button {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] a,
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] button {
   background: transparent;
   color: var(--kunin-white);
   font: inherit;
@@ -920,7 +921,7 @@ body .ashby-application-form-container > [role="alert"][data-highlight="negative
 
 @media (max-width: 39.9375rem) {
   body .ashby-application-form-failure-container,
-  body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+  body .ashby-application-form-container [role="alert"][data-highlight="negative"] {
     padding: 1.4375rem;
     margin-bottom: 1.5rem;
   }
@@ -1147,7 +1148,7 @@ body .ashby-application-form-input-autocomplete-popup-loading {
 body .ashby-application-form-autofill-input-form-alert :is(h1, h2, h3, h4),
 body .ashby-application-form-success-container :is(h1, h2, h3, h4),
 body .ashby-application-form-failure-container :is(h1, h2, h3, h4),
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(h1, h2, h3, h4) {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] :is(h1, h2, h3, h4) {
   display: block !important;
   color: var(--kunin-white) !important;
 }
@@ -1157,8 +1158,8 @@ body .ashby-application-form-autofill-input-form-alert,
 body .ashby-application-form-autofill-input-form-alert :is(p, ul, ol, li),
 body .ashby-application-form-failure-container :is(ul, ol, li),
 body .ashby-application-form-failure-container li p,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(ul, ol, li),
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] li p {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] :is(ul, ol, li),
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] li p {
   font-size: 1rem !important;
   line-height: 1.2;
 }
@@ -1323,7 +1324,7 @@ body .ashby-application-form-field-entry {
 body .ashby-application-form-autofill-input-form-alert[data-highlight],
 body .ashby-application-form-success-container,
 body .ashby-application-form-failure-container,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] {
   border: 0px solid transparent !important;
   outline: none !important;
   box-shadow: none !important;
@@ -1332,12 +1333,12 @@ body .ashby-application-form-container > [role="alert"][data-highlight="negative
 /* Main feedback panels: 40px visual inset in the updated Figma. */
 body .ashby-application-form-success-container,
 body .ashby-application-form-failure-container,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] {
   padding: 2.5rem;
 }
 body .ashby-application-form-success-container :is(h1, h2, h3, h4),
 body .ashby-application-form-failure-container :is(h1, h2, h3, h4),
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(h1, h2, h3, h4) {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] :is(h1, h2, h3, h4) {
   margin: 0 0 0.5rem;
   font: 400 1.5rem/1.2 var(--kunin-body-font);
   letter-spacing: 0;
@@ -1346,22 +1347,22 @@ body .ashby-application-form-container > [role="alert"][data-highlight="negative
 body .ashby-application-form-success-container :is(p, ul, ol, li),
 body .ashby-application-form-failure-container :is(p, ul, ol, li),
 body .ashby-application-form-failure-container li p,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(p, ul, ol, li),
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] li p {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] :is(p, ul, ol, li),
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] li p {
   font: 400 0.75rem/1.2 var(--kunin-label-font) !important;
   letter-spacing: 0;
 }
 body .ashby-application-form-failure-container :is(ul, ol),
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(ul, ol) {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] :is(ul, ol) {
   margin: 0;
   padding-left: 0.75rem;
 }
 body .ashby-application-form-failure-container li,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] li {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] li {
   margin: 0;
 }
 body .ashby-application-form-failure-container :is(a, button),
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(a, button) {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] :is(a, button) {
   color: var(--kunin-gold-25) !important;
   font: inherit;
   text-decoration: underline;
@@ -1410,7 +1411,7 @@ body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"
 @media (max-width: 39.9375rem) {
   body .ashby-application-form-success-container,
   body .ashby-application-form-failure-container,
-  body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+  body .ashby-application-form-container [role="alert"][data-highlight="negative"] {
     padding: 1.5rem;
   }
 }
@@ -1418,12 +1419,12 @@ body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"
 /* Error-message field links retain their underline and brighten on hover. */
 body .ashby-application-form-failure-container :is(a, button),
 body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"] :is(a, button),
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(a, button) {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] :is(a, button) {
   transition: color 250ms ease-out !important;
 }
 body .ashby-application-form-failure-container :is(a, button):hover,
 body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"] :is(a, button):hover,
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(a, button):hover {
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] :is(a, button):hover {
   color: var(--kunin-gold-20) !important;
   transition: color 250ms ease-out !important;
 }
@@ -1519,10 +1520,13 @@ body .ashby-application-form-input-autocomplete-popup:focus-within {
    Heading sizes remain controlled by the dedicated heading rules above. */
 body .ashby-application-form-failure-container,
 body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"],
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"],
+body .ashby-application-form-container [role="alert"][data-highlight="negative"],
 body .ashby-application-form-failure-container :is(p, ul, ol, li, a, button),
 body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"] :is(p, ul, ol, li, a, button),
-body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(p, ul, ol, li, a, button),
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] :is(p, ul, ol, li, a, button),
+body .ashby-application-form-failure-container li p,
+body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"] li p,
+body .ashby-application-form-container [role="alert"][data-highlight="negative"] li p,
 body .ashby-application-form-success-container p,
 body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"] p {
   font-size: 0.875rem !important;
