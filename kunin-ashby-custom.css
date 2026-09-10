@@ -1,0 +1,1499 @@
+/* Kunin / Ashby application form — matched to form-ashby-kunin-new.fig.
+   Upload this entire file to Ashby's Custom CSS setting.
+   The existing Webflow embed can stay as it is.
+   Fonts must load inside the iframe; parent-page fonts are not inherited.
+   Uses Ashby's public CSS hooks and verified field data attributes.
+   v12: Ashby-safe spinner colors; select and earlier state fixes retained.
+   No ID selectors or nested bare state pseudo-classes.
+   Disabled, pressed, loading and field-error treatments
+   extend the supplied default/hover/filled/error/success design states.
+*/
+@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400&family=STIX+Two+Text:wght@400;500;600&display=swap");
+
+:root {
+  /* Names mirror the site's palette, namespaced for the Ashby iframe. */
+  --kunin-black: #000000;
+  --kunin-off-black: #111417;
+  --kunin-white: #ffffff;
+  --kunin-white-20p: rgba(255, 255, 255, 0.2);
+  --kunin-white-40p: rgba(255, 255, 255, 0.4);
+  --kunin-white-50p: rgba(255, 255, 255, 0.5);
+  --kunin-slate: #2a2f36;
+  --kunin-slate-50p: rgba(42, 47, 54, 0.5);
+  --kunin-slate-hover: #444b55; /* Upload file Button hover in Figma. */
+  --kunin-gold-20: #f4d9a0;
+  --kunin-gold-25: #cdae6e;
+  --kunin-gold-30: #c9ae67;
+  --kunin-green-20: #3e634a;
+  --kunin-gold-10: #ffc54d;
+  --kunin-brown: #6b3f2a;
+  --kunin-focus-ring: rgba(211, 219, 236, 0.3);
+  --kunin-red-10: #e82127;
+  --kunin-red-30: #b22f23;
+  --kunin-error-surface: #621a13; /* Figma error panel/delete button. */
+  --kunin-background: var(--kunin-black);
+  --kunin-field: var(--kunin-off-black);
+  --kunin-upload: var(--kunin-slate);
+  --kunin-text: #ffffff;
+  --kunin-cream: #f4f0e6;
+  --kunin-muted: var(--kunin-white-50p);
+  --kunin-gold: var(--kunin-gold-25);
+  --kunin-gold-hover: var(--kunin-gold-20);
+  --kunin-body-font: "STIX Two Text", Georgia, "Times New Roman", serif;
+  --kunin-label-font: "Geist Mono", "SFMono-Regular", Consolas, monospace;
+
+  --fontFamily: var(--kunin-body-font);
+  --colorAppBackground: var(--kunin-background);
+  --colorPrimary600: var(--kunin-gold);
+  --colorPrimary900: var(--kunin-gold-hover);
+  --colorPrimary500A: rgb(205 174 110 / 25%);
+  --colorNeutral000: #111417;
+  --colorNeutral100: #171b20;
+  --colorNeutral200: #23282e;
+  --colorNeutral300: #343b43;
+  --colorNeutral400: #646b74;
+  --colorNeutral500: #858a91;
+  --colorNeutral600: #a0a4aa;
+  --colorNeutral700: #c6c8cb;
+  --colorNeutral800: #f4f0e6;
+  --colorNeutral900: #ffffff;
+  --colorNegative200: var(--kunin-error-surface);
+  --colorNegative600: var(--kunin-red-30);
+  --colorPositive200: var(--kunin-gold-10);
+  --colorPositive600: #83d6a1;
+  --colorWarning600: #cdae6e;
+  --colorWarning800: #ddc18b;
+  --colorWarning900: #f4f0e6;
+  --borderRadiusContainer: 0;
+  --borderRadiusControl: 0;
+  --borderRadiusButton: 0;
+  --borderWidthBold: 1px;
+  --widthMaxJobBoard: 100%;
+  --transitionDuration: 250ms;
+  --transitionFunction: ease-out;
+  --checkboxAndRadioDim: 1rem;
+  --checkboxAndRadioCheckDim: 0.5rem;
+}
+
+/* Ashby sets its page background from --colorAppBackground above. */
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--kunin-background) !important;
+  color: var(--kunin-text);
+  color-scheme: dark;
+}
+
+body .ashby-application-form-container,
+body .ashby-survey-form-container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--kunin-text);
+  font: 400 1rem/1.5 var(--kunin-body-font);
+}
+
+body .ashby-application-form-section-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 2rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+body .ashby-application-form-section-container:first-child { margin-top: 0; }
+
+/* Full-width by default, including radio wrappers and conditional content. */
+body .ashby-application-form-section-container > * {
+  min-width: 0;
+  grid-column: 1 / -1;
+}
+
+body .ashby-application-form-field-entry,
+body .ashby-application-form-input-radio-group,
+body .ashby-application-form-input-checkbox-group {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+body .ashby-application-form-question-title,
+body .ashby-application-form-autofill-input-title {
+  display: block;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  color: var(--kunin-text);
+  font: 400 0.875rem/1.2 var(--kunin-label-font);
+  letter-spacing: 0.04375rem;
+  text-transform: uppercase;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Restyle Ashby's existing required marker; do not add one to optional fields. */
+body .ashby-application-form-question-title::after { color: inherit; }
+
+/* Remove the heading baseline shim for a 0.5rem label-to-input gap. */
+body .ashby-application-form-question-title::before { display: none; }
+
+body .ashby-application-form-question-description {
+  margin: 0 0 0.75rem;
+  color: var(--kunin-muted);
+  font: 400 0.875rem/1.4 var(--kunin-label-font);
+  letter-spacing: 0.04375rem;
+}
+
+body .ashby-application-form-question-description p { margin: 0; }
+
+body .ashby-application-form-section-header-title {
+  margin: 0 0 0.75rem;
+  color: var(--kunin-cream);
+  font: 400 1.75rem/1.2 var(--kunin-body-font);
+  letter-spacing: -0.0625rem;
+}
+
+body .ashby-application-form-section-header-description,
+body .ashby-application-form-texting-consent-description {
+  color: var(--kunin-muted);
+  font: 400 1rem/1.5 var(--kunin-body-font);
+}
+
+body :is(.ashby-application-form-input-text,
+  .ashby-application-form-input-textarea,
+  .ashby-application-form-input-autocomplete,
+  .ashby-application-form-input-dropdown-select,
+  .ashby-application-form-input-date) {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 3.25rem;
+  margin: 0;
+  padding: 0.9625rem 1.4375rem 0.9625rem 0.9375rem;
+  border: 1px solid var(--kunin-slate);
+  border-radius: 0;
+  background: var(--kunin-field);
+  box-shadow: none;
+  color: var(--kunin-text);
+  caret-color: var(--kunin-white);
+  font: 400 1rem/1.2 var(--kunin-body-font);
+
+}
+
+body .ashby-application-form-input-textarea {
+  min-height: 11.25rem;
+  padding-top: 1.1875rem;
+  resize: vertical;
+}
+
+body :is(.ashby-application-form-input-text,
+  .ashby-application-form-input-textarea,
+  .ashby-application-form-input-autocomplete)::placeholder {
+  color: var(--kunin-muted);
+  opacity: 1;
+}
+
+body :is(.ashby-application-form-input-autocomplete,
+  .ashby-application-form-input-dropdown-select) { padding-right: 3rem; }
+
+body .ashby-application-form-input-dropdown {
+  border: 0;
+  border-radius: 0;
+  background: var(--kunin-field);
+}
+
+body .ashby-application-form-input-autocomplete + button {
+  color: var(--kunin-muted);
+  background: transparent;
+}
+
+body .ashby-application-form-input-autocomplete + button svg,
+body .ashby-application-form-input-dropdown-icon { fill: currentColor; }
+
+body .ashby-application-form-input-autocomplete-popup {
+  border: 1px solid var(--kunin-white-50p);
+  border-radius: 0;
+  background: var(--kunin-field);
+  color: var(--kunin-text);
+}
+
+body .ashby-application-form-input-autocomplete-popup-result {
+  color: var(--kunin-text);
+  font: 400 1rem/1.4 var(--kunin-body-font);
+}
+
+body .ashby-application-form-input-autocomplete-popup-result:hover,
+body .ashby-application-form-input-autocomplete-popup-result[aria-selected="true"] {
+  background: var(--kunin-upload);
+  color: var(--kunin-cream);
+}
+
+/* Autofill banner: 2.5rem visual inset, including the border. */
+body .ashby-application-form-autofill-pane {
+  margin: 0 0 2.5rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none !important;
+}
+
+body .ashby-application-form-autofill-input-root {
+  box-sizing: border-box;
+  padding: 2.4375rem;
+  border: 1px solid var(--kunin-slate);
+  border-radius: 0;
+  background: var(--kunin-field);
+  color: var(--kunin-text);
+}
+
+/* Keep the drag highlight inside the iframe to prevent horizontal overflow. */
+body .ashby-application-form-autofill-input-root::after { inset: 0; }
+
+/* These structural selectors avoid Ashby's generated, versioned class names. */
+body .ashby-application-form-autofill-input-base-layer > div {
+  display: grid;
+  grid-template-areas: "header cta" "description cta";
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.875rem 1.5rem;
+  align-items: center;
+}
+
+body .ashby-application-form-autofill-input-base-layer > div > div:has(> .ashby-application-form-autofill-input-title) {
+  justify-content: flex-start;
+  gap: 0;
+}
+
+body .ashby-application-form-autofill-input-base-layer div:has(> .ashby-application-form-autofill-input-icon) {
+  display: none;
+}
+
+body .ashby-application-form-autofill-input-title {
+  margin: 0;
+  color: var(--kunin-cream);
+}
+
+body .ashby-application-form-autofill-input-description {
+  margin: 0;
+  color: var(--kunin-text);
+  font: 400 1.25rem/1.2 var(--kunin-body-font);
+  text-align: left;
+}
+
+body :is(.ashby-application-form-autofill-input-drag-layer,
+  .ashby-application-form-autofill-input-pending-layer) {
+  border-radius: 0;
+  background: rgb(17 20 23 / 95%);
+  color: var(--kunin-cream);
+}
+
+/* Keep Ashby's drag/pending visibility and uploaded-file behavior intact. */
+body .ashby-application-form-input-file {
+  display: block;
+  box-sizing: border-box;
+  min-height: 6.5rem;
+  padding: 1.5625rem 1.5rem;
+  border: 1px dashed var(--kunin-white);
+  border-radius: 0;
+  background: var(--kunin-field);
+  color: var(--kunin-text);
+}
+
+body .ashby-application-form-input-file-dropzone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+body .ashby-application-form-input-file-dropzone-instructions {
+  margin: 0;
+  color: var(--kunin-muted);
+  font: 400 1rem/1.2 var(--kunin-body-font);
+}
+
+body .ashby-application-form-input-file-item {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 3.25rem;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--kunin-text);
+  border-radius: 0;
+}
+
+body .ashby-application-form-input-file-item-name {
+  display: flex;
+  align-items: center;
+  flex: 1 1 0%;
+  min-width: 0;
+  margin: 0;
+  padding: 0.9375rem 1rem;
+  border: 0;
+  background: var(--kunin-slate-50p);
+  font: 400 1rem/1.2 var(--kunin-body-font);
+}
+
+body .ashby-application-form-input-file-item-name > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body .ashby-application-form-input-file-item-delete {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 3.25rem;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin: 0;
+  padding: 0.875rem;
+  border: 0 !important;
+  border-radius: 0;
+  background: var(--kunin-error-surface) !important;
+  box-shadow: none;
+  color: var(--kunin-white) !important;
+  cursor: pointer;
+}
+
+body .ashby-application-form-input-file-item-delete svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0;
+  fill: currentColor !important;
+}
+
+body .ashby-application-form-input-file-item-name { color: var(--kunin-text); }
+
+body .ashby-application-form-input-file-dropzone-upload,
+body .ashby-application-form-autofill-input-base-layer button {
+  display: inline-flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  gap: 0.75rem;
+  width: auto !important;
+  min-width: 7.875rem;
+  min-height: 3.25rem;
+  margin: 0;
+  padding: 0 0.71875rem;
+  border: 0 !important;
+  border-radius: 0;
+  background: var(--kunin-upload);
+  box-shadow: none;
+  color: var(--kunin-text);
+  font: 400 1rem/1.2 var(--kunin-body-font);
+  text-transform: none;
+  cursor: pointer;
+}
+
+body .ashby-application-form-input-file-dropzone-upload svg {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  fill: currentColor;
+}
+
+body .ashby-application-form-input-radio-group-option,
+body .ashby-application-form-input-checkbox-group-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  color: var(--kunin-text);
+}
+
+body .ashby-application-form-input-radio-group-option + .ashby-application-form-input-radio-group-option,
+body .ashby-application-form-input-checkbox-group-option + .ashby-application-form-input-checkbox-group-option {
+  margin-top: 0.5rem;
+}
+
+body .ashby-application-form-input-radio-group-option-label,
+body .ashby-application-form-input-checkbox-group-option-label {
+  margin: 0;
+  color: var(--kunin-text);
+  font: 400 1rem/1.2 var(--kunin-body-font);
+  cursor: pointer;
+}
+
+body .ashby-application-form-input-radio-group-option-label::before,
+body .ashby-application-form-input-checkbox-group-option-label::before { display: none; }
+
+/* Ashby draws its radio circle around an invisible native input. */
+body .ashby-application-form-input-radio-group-option > span:has(> input[type="radio"]) {
+  flex: 0 0 1rem;
+  margin-top: 0.125rem;
+  background: transparent;
+  box-sizing: border-box;
+  border: 2px solid var(--kunin-white);
+}
+
+body .ashby-application-form-input-radio-group-option > span:has(> input:checked) {
+  border-color: var(--kunin-white) !important;
+  background: var(--kunin-white);
+}
+
+body .ashby-application-form-input-radio-group-option > span:has(> input:checked) > span {
+  background-color: var(--kunin-white);
+}
+
+body .ashby-application-form-submit-button {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: fit-content !important;
+  max-width: 100%;
+  min-width: 13.0625rem;
+  min-height: 3.25rem;
+  margin: 1rem 0 0 auto !important;
+  padding: 0 1.5rem;
+  border: 0 !important;
+  border-radius: 0;
+  background: var(--kunin-gold) !important;
+  box-shadow: none;
+  color: var(--kunin-field) !important;
+  font: 400 1rem/1.2 var(--kunin-body-font);
+  text-transform: none;
+  cursor: pointer;
+}
+
+body .ashby-application-form-submit-button > svg { fill: currentColor; }
+
+/* The breakpoint measures the iframe width, not the Webflow page width.
+   Pair name/email and phone/location; preserve DOM and keyboard order.
+   Other fields (including additional job-specific questions) stay full width. */
+@media (min-width: 40rem) {
+  body .ashby-application-form-section-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body .ashby-application-form-section-container > .ashby-application-form-field-entry[data-field-path="_systemfield_name"],
+  body .ashby-application-form-section-container > .ashby-application-form-field-entry[data-field-path="_systemfield_email"],
+  body .ashby-application-form-section-container > .ashby-application-form-field-entry[data-field-path="_systemfield_location"],
+  body .ashby-application-form-section-container > .ashby-application-form-field-entry:has(input[type="tel"]) {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 39.9375rem) {
+  body .ashby-application-form-autofill-input-root { padding: 1.4375rem; }
+  body .ashby-application-form-autofill-pane { margin-bottom: 1.5rem !important; }
+  body .ashby-application-form-autofill-input-base-layer > div {
+    grid-template-areas: "header" "description" "cta";
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.875rem;
+  }
+  body .ashby-application-form-autofill-input-base-layer > div > div:has(> button) {
+    justify-content: flex-start;
+  }
+  body .ashby-application-form-autofill-input-description { font-size: 1.125rem; }
+  body .ashby-application-form-input-file { padding: 1.5625rem 0.9375rem; }
+  
+}
+
+/* INTERACTION STATES — explicit selectors keep upload validation predictable. */
+body .ashby-application-form-container .ashby-application-form-input-text,
+body .ashby-application-form-container .ashby-application-form-input-textarea,
+body .ashby-application-form-container .ashby-application-form-input-autocomplete,
+body .ashby-application-form-container .ashby-application-form-input-dropdown-select,
+body .ashby-application-form-container .ashby-application-form-input-date {
+  color: var(--kunin-white);
+  font-family: var(--kunin-body-font);
+}
+
+body .ashby-application-form-container .ashby-application-form-input-text,
+body .ashby-application-form-container .ashby-application-form-input-textarea,
+body .ashby-application-form-container .ashby-application-form-input-autocomplete,
+body .ashby-application-form-container .ashby-application-form-input-dropdown-select,
+body .ashby-application-form-container .ashby-application-form-input-date {
+  border-width: 1px;
+  outline: 2px solid transparent !important;
+  outline-offset: 0px !important;
+}
+
+/* Revised field hover/focus: white-50p border and D3DBEC outline at 30% opacity. */
+body .ashby-application-form-container .ashby-application-form-input-text:hover:not([disabled]):not([aria-disabled="true"]):not([readonly]),
+body .ashby-application-form-container .ashby-application-form-input-text:focus:not([disabled]):not([aria-disabled="true"]):not([readonly]),
+body .ashby-application-form-container .ashby-application-form-input-textarea:hover:not([disabled]):not([aria-disabled="true"]):not([readonly]),
+body .ashby-application-form-container .ashby-application-form-input-textarea:focus:not([disabled]):not([aria-disabled="true"]):not([readonly]),
+body .ashby-application-form-container .ashby-application-form-input-autocomplete:hover:not([disabled]):not([aria-disabled="true"]):not([readonly]),
+body .ashby-application-form-container .ashby-application-form-input-autocomplete:focus:not([disabled]):not([aria-disabled="true"]):not([readonly]),
+body .ashby-application-form-container .ashby-application-form-input-dropdown-select:hover:not([disabled]):not([aria-disabled="true"]):not([readonly]),
+body .ashby-application-form-container .ashby-application-form-input-dropdown-select:focus:not([disabled]):not([aria-disabled="true"]):not([readonly]),
+body .ashby-application-form-container .ashby-application-form-input-date:hover:not([disabled]):not([aria-disabled="true"]):not([readonly]),
+body .ashby-application-form-container .ashby-application-form-input-date:focus:not([disabled]):not([aria-disabled="true"]):not([readonly]) {
+  background-color: var(--kunin-slate);
+  border-color: var(--kunin-white-50p);
+  outline: 2px solid var(--kunin-focus-ring) !important;
+  outline-offset: 0px !important;
+  box-shadow: none;
+}
+
+body .ashby-application-form-container .ashby-application-form-input-text:autofill,
+body .ashby-application-form-container .ashby-application-form-input-textarea:autofill {
+  -webkit-text-fill-color: var(--kunin-white);
+  -webkit-box-shadow: 0 0 0 62.5rem var(--kunin-field) inset;
+  caret-color: var(--kunin-white);
+}
+
+body .ashby-application-form-container .ashby-application-form-input-text:autofill:focus,
+body .ashby-application-form-container .ashby-application-form-input-textarea:autofill:focus {
+  -webkit-box-shadow: 0 0 0 62.5rem var(--kunin-slate) inset;
+}
+
+body .ashby-application-form-submit-button:hover:not([disabled]):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  background: var(--kunin-gold-20) !important;
+  color: var(--kunin-off-black) !important;
+}
+
+body .ashby-application-form-submit-button:active:not([disabled]):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  background: var(--kunin-gold-30) !important;
+  color: var(--kunin-off-black) !important;
+}
+
+body .ashby-application-form-input-file-dropzone-upload:hover:not([disabled]):not([aria-disabled="true"]):not([aria-busy="true"]),
+body .ashby-application-form-autofill-input-base-layer button:hover:not([disabled]):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  background: var(--kunin-slate-hover) !important;
+  color: var(--kunin-white) !important;
+}
+
+body .ashby-application-form-input-file-dropzone-upload:active:not([disabled]):not([aria-disabled="true"]):not([aria-busy="true"]),
+body .ashby-application-form-autofill-input-base-layer button:active:not([disabled]):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  background: var(--kunin-off-black) !important;
+  color: var(--kunin-white) !important;
+}
+
+body .ashby-application-form-input-file-item-delete:hover:not([disabled]):not([aria-disabled="true"]) {
+  background: var(--kunin-red-30) !important;
+}
+
+body .ashby-application-form-input-file-item-delete:active:not([disabled]):not([aria-disabled="true"]) {
+  background: var(--kunin-error-surface) !important;
+}
+
+body .ashby-application-form-input-radio-group-option:hover > span:has(> input[type="radio"]):not([data-disabled="true"]) {
+  box-shadow: none;
+}
+
+body .ashby-application-form-input-checkbox-group-option > span:has(> input[type="checkbox"]) {
+  background: var(--kunin-off-black);
+  border-color: var(--kunin-white);
+  border-radius: 0;
+}
+
+body .ashby-application-form-input-checkbox-group-option > span:has(> input:checked) {
+  background: var(--kunin-white);
+  border-color: var(--kunin-white);
+  color: var(--kunin-off-black);
+}
+
+body .ashby-application-form-input-checkbox-group-option > span:has(> input:checked) svg {
+  fill: var(--kunin-off-black);
+}
+
+/* Keep the invalid border visible even while the field has focus. */
+body .ashby-application-form-container .ashby-application-form-input-text[aria-invalid="true"],
+body .ashby-application-form-container .ashby-application-form-input-text:user-invalid,
+body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-text:invalid,
+body .ashby-application-form-container .ashby-application-form-input-textarea[aria-invalid="true"],
+body .ashby-application-form-container .ashby-application-form-input-textarea:user-invalid,
+body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-textarea:invalid,
+body .ashby-application-form-container .ashby-application-form-input-autocomplete[aria-invalid="true"],
+body .ashby-application-form-container .ashby-application-form-input-autocomplete:user-invalid,
+body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-autocomplete:invalid,
+body .ashby-application-form-container .ashby-application-form-input-dropdown-select[aria-invalid="true"],
+body .ashby-application-form-container .ashby-application-form-input-dropdown-select:user-invalid,
+body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-dropdown-select:invalid,
+body .ashby-application-form-container .ashby-application-form-input-date[aria-invalid="true"],
+body .ashby-application-form-container .ashby-application-form-input-date:user-invalid,
+body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-date:invalid {
+  border-color: var(--kunin-red-30) !important;
+}
+
+body .ashby-application-form-input-file:has(input[aria-invalid="true"]),
+body .ashby-application-form-input-file:has(input:user-invalid),
+body .ashby-application-form-container:has(> [role="alert"][data-highlight="negative"]) .ashby-application-form-input-file:has(input:invalid) {
+  border-color: var(--kunin-red-30) !important;
+}
+
+body .ashby-application-form-container .ashby-application-form-input-text[disabled],
+body .ashby-application-form-container .ashby-application-form-input-text[aria-disabled="true"],
+body .ashby-application-form-container .ashby-application-form-input-textarea[disabled],
+body .ashby-application-form-container .ashby-application-form-input-textarea[aria-disabled="true"],
+body .ashby-application-form-container .ashby-application-form-input-autocomplete[disabled],
+body .ashby-application-form-container .ashby-application-form-input-autocomplete[aria-disabled="true"],
+body .ashby-application-form-container .ashby-application-form-input-dropdown-select[disabled],
+body .ashby-application-form-container .ashby-application-form-input-dropdown-select[aria-disabled="true"],
+body .ashby-application-form-container .ashby-application-form-input-date[disabled],
+body .ashby-application-form-container .ashby-application-form-input-date[aria-disabled="true"] {
+  background: var(--kunin-field) !important;
+  border-color: var(--kunin-slate) !important;
+  color: var(--kunin-white-40p) !important;
+  opacity: 1;
+  cursor: not-allowed;
+  box-shadow: none;
+
+}
+
+body .ashby-application-form-container .ashby-application-form-input-text[readonly],
+body .ashby-application-form-container .ashby-application-form-input-textarea[readonly] {
+  background: var(--kunin-field);
+  border-color: var(--kunin-slate);
+  color: rgba(255,255,255,0.7);
+  cursor: text;
+}
+
+body .ashby-application-form-submit-button[disabled],
+body .ashby-application-form-submit-button[aria-disabled="true"],
+body .ashby-application-form-input-file-dropzone-upload[disabled],
+body .ashby-application-form-input-file-dropzone-upload[aria-disabled="true"],
+body .ashby-application-form-autofill-input-base-layer button[disabled],
+body .ashby-application-form-autofill-input-base-layer button[aria-disabled="true"],
+body .ashby-application-form-input-file-item-delete[disabled],
+body .ashby-application-form-input-file-item-delete[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+body .ashby-application-form-input-file-dropzone-upload[disabled],
+body .ashby-application-form-autofill-input-base-layer button[disabled] {
+  background: var(--kunin-slate) !important;
+  color: var(--kunin-white) !important;
+}
+
+body .ashby-application-form-input-radio-group-option:has(input[disabled]),
+body .ashby-application-form-input-checkbox-group-option:has(input[disabled]) {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+body .ashby-application-form-input-radio-group-option:has(input[disabled]) label,
+body .ashby-application-form-input-checkbox-group-option:has(input[disabled]) label {
+  cursor: not-allowed;
+}
+
+body .ashby-application-form-submit-button[aria-busy="true"],
+body .ashby-application-form-submit-button:has(svg[viewBox="0 0 38 38"]),
+body .ashby-application-form-submit-button:has([role="progressbar"]),
+body .ashby-application-form-input-file-dropzone-upload[aria-busy="true"],
+body .ashby-application-form-input-file-dropzone-upload:has(svg[viewBox="0 0 38 38"]),
+body .ashby-application-form-input-file-dropzone-upload:has([role="progressbar"]),
+body .ashby-application-form-autofill-input-base-layer button[aria-busy="true"],
+body .ashby-application-form-autofill-input-base-layer button:has(svg[viewBox="0 0 38 38"]),
+body .ashby-application-form-autofill-input-base-layer button:has([role="progressbar"]),
+body .ashby-application-form-input-file-item-delete[aria-busy="true"],
+body .ashby-application-form-input-file-item-delete:has(svg[viewBox="0 0 38 38"]),
+body .ashby-application-form-input-file-item-delete:has([role="progressbar"]) {
+  opacity: 0.75;
+  cursor: wait !important;
+}
+
+body .ashby-application-form-input-file-dropzone-upload:has(svg[viewBox="0 0 38 38"])::before,
+body .ashby-application-form-autofill-input-base-layer button:has(svg[viewBox="0 0 38 38"])::before {
+  display: none;
+}
+
+body .ashby-application-form-submit-button svg[viewBox="0 0 38 38"],
+body .ashby-application-form-input-file-dropzone-upload svg[viewBox="0 0 38 38"],
+body .ashby-application-form-autofill-input-base-layer button svg[viewBox="0 0 38 38"],
+body .ashby-application-form-input-file-item-delete svg[viewBox="0 0 38 38"] {
+  width: 1rem;
+  height: 1rem;
+  fill: none !important;
+}
+
+body .ashby-application-form-submit-button svg[viewBox="0 0 38 38"] circle,
+body .ashby-application-form-input-file-dropzone-upload svg[viewBox="0 0 38 38"] circle,
+body .ashby-application-form-autofill-input-base-layer button svg[viewBox="0 0 38 38"] circle,
+body .ashby-application-form-input-file-item-delete svg[viewBox="0 0 38 38"] circle {
+  fill: currentColor;
+}
+
+body .ashby-application-form-input-file:has(.ashby-application-form-input-file-item) {
+  padding: 1.1875rem;
+}
+
+body .ashby-application-form-input-file-item {
+  margin-bottom: 0.75rem;
+}
+
+/* Autofill overlays preserve Ashby's data-state visibility and interactions. */
+body .ashby-application-form-autofill-input-root[data-state="drag"],
+body .ashby-application-form-autofill-input-root[data-state="pending"] {
+  border-color: var(--kunin-white-40p);
+}
+
+body .ashby-application-form-autofill-input-root::after {
+  border-color: var(--kunin-white-40p);
+}
+
+body .ashby-application-form-autofill-input-drag-layer,
+body .ashby-application-form-autofill-input-pending-layer {
+  background: rgba(17,20,23,0.95);
+  color: var(--kunin-white);
+  font-family: var(--kunin-body-font);
+}
+
+body .ashby-application-form-autofill-input-pending-layer[data-state="active"] {
+  cursor: wait !important;
+}
+
+body .ashby-application-form-autofill-input-drag-layer svg {
+  fill: var(--kunin-white);
+}
+
+body .ashby-application-form-autofill-input-base-layer:has(.ashby-application-form-autofill-input-form-alert) {
+  row-gap: 2.5rem;
+}
+
+body .ashby-application-form-autofill-input-base-layer > .ashby-application-form-autofill-input-form-alert {
+  display: block;
+}
+
+body .ashby-application-form-autofill-input-form-alert,
+body .ashby-application-form-success-container,
+body .ashby-application-form-failure-container,
+body .ashby-application-form-blocked-application-container,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+  box-sizing: border-box;
+  min-width: 0;
+  border-radius: 0;
+  box-shadow: none;
+  color: var(--kunin-white);
+  font: 400 1.25rem/1.2 var(--kunin-body-font);
+  overflow-wrap: anywhere;
+}
+
+body .ashby-application-form-autofill-input-form-alert,
+body .ashby-application-form-success-container,
+body .ashby-application-form-blocked-application-container {
+  margin: 0;
+  padding: 1.4375rem;
+  border: 1px solid var(--kunin-slate);
+}
+
+body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"],
+body .ashby-application-form-success-container {
+  background: var(--kunin-gold-10);
+  border: 1px solid var(--kunin-white-40p) !important;
+}
+
+body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"],
+body .ashby-application-form-failure-container,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+  background: var(--kunin-error-surface);
+  border: 1px solid var(--kunin-red-30) !important;
+}
+
+body .ashby-application-form-failure-container,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+  padding: 2.4375rem;
+  margin: 0 0 2.5rem;
+}
+
+body .ashby-application-form-blocked-application-container {
+  background: var(--kunin-field);
+  border-color: var(--kunin-gold);
+}
+
+body .ashby-application-form-autofill-input-form-alert h1,
+body .ashby-application-form-autofill-input-form-alert h2,
+body .ashby-application-form-autofill-input-form-alert h3,
+body .ashby-application-form-autofill-input-form-alert h4,
+body .ashby-application-form-success-container h1,
+body .ashby-application-form-success-container h2,
+body .ashby-application-form-success-container h3,
+body .ashby-application-form-success-container h4,
+body .ashby-application-form-failure-container h1,
+body .ashby-application-form-failure-container h2,
+body .ashby-application-form-failure-container h3,
+body .ashby-application-form-failure-container h4,
+body .ashby-application-form-blocked-application-container h1,
+body .ashby-application-form-blocked-application-container h2,
+body .ashby-application-form-blocked-application-container h3,
+body .ashby-application-form-blocked-application-container h4,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h1,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h2,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h3,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h4 {
+  margin: 0 0 0.875rem;
+  color: var(--kunin-cream);
+  font: 400 0.875rem/1.2 var(--kunin-label-font);
+  letter-spacing: 0.04375rem;
+  text-transform: uppercase;
+}
+
+body .ashby-application-form-autofill-input-form-alert h1::before,
+body .ashby-application-form-autofill-input-form-alert h2::before,
+body .ashby-application-form-autofill-input-form-alert h3::before,
+body .ashby-application-form-autofill-input-form-alert h4::before,
+body .ashby-application-form-autofill-input-form-alert p::before,
+body .ashby-application-form-success-container h1::before,
+body .ashby-application-form-success-container h2::before,
+body .ashby-application-form-success-container h3::before,
+body .ashby-application-form-success-container h4::before,
+body .ashby-application-form-success-container p::before,
+body .ashby-application-form-failure-container h1::before,
+body .ashby-application-form-failure-container h2::before,
+body .ashby-application-form-failure-container h3::before,
+body .ashby-application-form-failure-container h4::before,
+body .ashby-application-form-failure-container p::before,
+body .ashby-application-form-blocked-application-container h1::before,
+body .ashby-application-form-blocked-application-container h2::before,
+body .ashby-application-form-blocked-application-container h3::before,
+body .ashby-application-form-blocked-application-container h4::before,
+body .ashby-application-form-blocked-application-container p::before,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h1::before,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h2::before,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h3::before,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] h4::before,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] p::before {
+  display: none;
+}
+
+body .ashby-application-form-autofill-input-form-alert p,
+body .ashby-application-form-success-container p,
+body .ashby-application-form-failure-container p,
+body .ashby-application-form-blocked-application-container p,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] p {
+  margin: 0;
+  color: var(--kunin-white);
+  font: 400 1.25rem/1.2 var(--kunin-body-font);
+}
+
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] li {
+  margin: 0.5rem 0 0;
+  font: inherit;
+  color: inherit;
+}
+
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] a,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] button {
+  background: transparent;
+  color: var(--kunin-white);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.1875rem;
+}
+
+@media (max-width: 39.9375rem) {
+  body .ashby-application-form-failure-container,
+  body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+    padding: 1.4375rem;
+    margin-bottom: 1.5rem;
+  }
+  body .ashby-application-form-autofill-input-base-layer:has(.ashby-application-form-autofill-input-form-alert) { row-gap: 1.5rem; }
+  body .ashby-application-form-input-file:has(.ashby-application-form-input-file-item) { padding: 1.1875rem 0.9375rem; }
+}
+
+/* Text-entry cursor, including inputs without a type attribute. */
+body .ashby-application-form-container .ashby-application-form-input-text:not([disabled]):not([aria-disabled="true"]),
+body .ashby-application-form-container .ashby-application-form-input-textarea:not([disabled]):not([aria-disabled="true"]),
+body .ashby-application-form-container .ashby-application-form-input-autocomplete:not([disabled]):not([aria-disabled="true"]) {
+  cursor: text;
+}
+
+/* Unlike autofill, the regular file uploader currently exposes drag state
+   only through a generated class. Match its known prefix under the public
+   file hook, without depending on the version-specific suffix. */
+body .ashby-application-form-input-file[class*="_dragging_"] {
+  background: var(--kunin-slate);
+  border-color: var(--kunin-white-40p);
+
+}
+body .ashby-application-form-input-file:has(.ashby-application-form-input-file-item-name svg[viewBox="0 0 38 38"]) {
+  cursor: wait;
+}
+body .ashby-application-form-input-file:has(input[disabled]) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Uniform state timing, including pseudo-elements and the separate submit button.
+   Loading animations keep Ashby's own animation timing. */
+body :is(.ashby-application-form-container, .ashby-survey-form-container,
+  .ashby-application-form-autofill-pane, .ashby-application-form-submit-button),
+body :is(.ashby-application-form-container, .ashby-survey-form-container,
+  .ashby-application-form-autofill-pane, .ashby-application-form-submit-button) *,
+body :is(.ashby-application-form-container, .ashby-survey-form-container,
+  .ashby-application-form-autofill-pane, .ashby-application-form-submit-button)::before,
+body :is(.ashby-application-form-container, .ashby-survey-form-container,
+  .ashby-application-form-autofill-pane, .ashby-application-form-submit-button)::after,
+body :is(.ashby-application-form-container, .ashby-survey-form-container,
+  .ashby-application-form-autofill-pane, .ashby-application-form-submit-button) *::before,
+body :is(.ashby-application-form-container, .ashby-survey-form-container,
+  .ashby-application-form-autofill-pane, .ashby-application-form-submit-button) *::after {
+  transition: all 250ms ease-out !important;
+  outline: none !important;
+  outline-offset: 0px !important;
+  caret-color: var(--kunin-white);
+}
+
+/* Clear Ashby's hover border/shadow and built-in icon margins in every state.
+   Actual input, panel and upload-area borders are kept. */
+body .ashby-application-form-submit-button,
+body .ashby-application-form-input-file-dropzone-upload,
+body .ashby-application-form-autofill-input-base-layer button,
+body .ashby-application-form-input-file-item-delete {
+  display: inline-flex;
+  flex: 0 0 auto !important;
+  width: fit-content !important;
+  height: 3.25rem;
+  min-height: 3.25rem;
+  max-width: 100%;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 0;
+  gap: 0.75rem;
+  letter-spacing: 0;
+  line-height: 1.2;
+  font-weight: 400;
+  transition: all 250ms ease-out !important;
+}
+
+body .ashby-application-form-submit-button {
+  display: flex;
+}
+
+body .ashby-application-form-submit-button span,
+body .ashby-application-form-input-file-dropzone-upload span,
+body .ashby-application-form-autofill-input-base-layer button span,
+body .ashby-application-form-input-file-item-delete span {
+  margin: 0 !important;
+  padding: 0 !important;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+body .ashby-application-form-submit-button svg,
+body .ashby-application-form-input-file-dropzone-upload svg,
+body .ashby-application-form-autofill-input-base-layer button svg,
+body .ashby-application-form-input-file-item-delete svg,
+body .ashby-application-form-input-file-item-name svg {
+  flex-shrink: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle;
+}
+
+body .ashby-application-form-input-file-item-delete {
+  flex: 0 0 3.25rem !important;
+  width: 3.25rem !important;
+  min-width: 3.25rem;
+  padding: 0.875rem;
+  gap: 0;
+}
+
+/* Override Ashby's double-hover negative/quaternary button selector. */
+body .ashby-application-form-input-file-item-delete:hover:not([disabled]):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  background-color: var(--kunin-red-30) !important;
+  color: var(--kunin-white) !important;
+}
+body .ashby-application-form-input-file-item-delete:active:not([disabled]):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  background-color: var(--kunin-error-surface) !important;
+}
+
+body .ashby-application-form-input-file-item-name {
+  gap: 0.75rem;
+  padding: 0 1.25rem;
+}
+
+/* Only replace static icons. Ashby's loading SVG remains visible. */
+body .ashby-application-form-submit-button > svg:not([viewBox="0 0 38 38"]),
+body .ashby-application-form-input-file-dropzone-upload > svg:not([viewBox="0 0 38 38"]),
+body .ashby-application-form-autofill-input-base-layer button > svg:not([viewBox="0 0 38 38"]),
+body .ashby-application-form-input-file-item-delete > svg:not([viewBox="0 0 38 38"]),
+body .ashby-application-form-input-file-item-name > svg:not([viewBox="0 0 38 38"]) {
+  display: none !important;
+}
+
+/* Exact paperclip vector from form-ashby-kunin-new.fig. */
+body .ashby-application-form-input-file-dropzone-upload::before,
+body .ashby-application-form-autofill-input-base-layer button::before,
+body .ashby-application-form-input-file-item-name::before {
+  content: "";
+  display: block;
+  flex: 0 0 1rem;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  padding: 0;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%284%201.333333%29%22%20d%3D%22M7.333333%203.333333L7.333333%2010.333334C7.333333%2011.305794%206.947025%2012.238425%206.259392%2012.926059C5.571759%2013.613692%204.639127%2014%203.666667%2014C2.694206%2014%201.761575%2013.613692%201.073942%2012.926059C0.386309%2012.238425%200%2011.305794%200%2010.333334L0%202.666667C0%201.959423%200.280951%201.281146%200.781048%200.781049C1.281145%200.280952%201.959423%200%202.666667%200C3.373911%200%204.052188%200.280952%204.552285%200.781049C5.052382%201.281146%205.333333%201.959423%205.333333%202.666667L5.333333%209.666667C5.333333%2010.108694%205.157739%2010.532618%204.845178%2010.845179C4.532618%2011.157739%204.108694%2011.333334%203.666667%2011.333334C3.224639%2011.333334%202.800716%2011.157739%202.488155%2010.845179C2.175595%2010.532618%202%2010.108694%202%209.666667L2%203.333333L2.666667%203.333333L2.666667%209.666667C2.666667%209.931884%202.772023%2010.186237%202.95956%2010.373774C3.147096%2010.56131%203.40145%2010.666667%203.666667%2010.666667C3.931883%2010.666667%204.186237%2010.56131%204.373774%2010.373774C4.56131%2010.186237%204.666667%209.931884%204.666667%209.666667L4.666667%202.666667C4.666667%202.136234%204.455954%201.627526%204.080881%201.252453C3.705808%200.87738%203.1971%200.666667%202.666667%200.666667C2.136234%200.666667%201.627526%200.87738%201.252453%201.252453C0.87738%201.627526%200.666667%202.136234%200.666667%202.666667L0.666667%2010.333334C0.666667%2012%202%2013.333334%203.666667%2013.333334C5.333333%2013.333334%206.666667%2012%206.666667%2010.333334L6.666667%203.333333L7.333333%203.333333Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%284%201.333333%29%22%20d%3D%22M7.333333%203.333333L7.333333%2010.333334C7.333333%2011.305794%206.947025%2012.238425%206.259392%2012.926059C5.571759%2013.613692%204.639127%2014%203.666667%2014C2.694206%2014%201.761575%2013.613692%201.073942%2012.926059C0.386309%2012.238425%200%2011.305794%200%2010.333334L0%202.666667C0%201.959423%200.280951%201.281146%200.781048%200.781049C1.281145%200.280952%201.959423%200%202.666667%200C3.373911%200%204.052188%200.280952%204.552285%200.781049C5.052382%201.281146%205.333333%201.959423%205.333333%202.666667L5.333333%209.666667C5.333333%2010.108694%205.157739%2010.532618%204.845178%2010.845179C4.532618%2011.157739%204.108694%2011.333334%203.666667%2011.333334C3.224639%2011.333334%202.800716%2011.157739%202.488155%2010.845179C2.175595%2010.532618%202%2010.108694%202%209.666667L2%203.333333L2.666667%203.333333L2.666667%209.666667C2.666667%209.931884%202.772023%2010.186237%202.95956%2010.373774C3.147096%2010.56131%203.40145%2010.666667%203.666667%2010.666667C3.931883%2010.666667%204.186237%2010.56131%204.373774%2010.373774C4.56131%2010.186237%204.666667%209.931884%204.666667%209.666667L4.666667%202.666667C4.666667%202.136234%204.455954%201.627526%204.080881%201.252453C3.705808%200.87738%203.1971%200.666667%202.666667%200.666667C2.136234%200.666667%201.627526%200.87738%201.252453%201.252453C0.87738%201.627526%200.666667%202.136234%200.666667%202.666667L0.666667%2010.333334C0.666667%2012%202%2013.333334%203.666667%2013.333334C5.333333%2013.333334%206.666667%2012%206.666667%2010.333334L6.666667%203.333333L7.333333%203.333333Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+
+/* Exact arrow vector from form-ashby-kunin-new.fig. */
+body .ashby-application-form-submit-button::after {
+  content: "";
+  display: block;
+  flex: 0 0 1rem;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  padding: 0;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%282.666667%204%29%22%20d%3D%22M6.666667%208L5.733334%207.033333L8.1%204.666667L0%204.666667L0%203.333333L8.1%203.333333L5.733334%200.966667L6.666667%200L10.666667%204L6.666667%208Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%282.666667%204%29%22%20d%3D%22M6.666667%208L5.733334%207.033333L8.1%204.666667L0%204.666667L0%203.333333L8.1%203.333333L5.733334%200.966667L6.666667%200L10.666667%204L6.666667%208Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+
+/* Exact delete vector from form-ashby-kunin-new.fig. */
+body .ashby-application-form-input-file-item-delete::before {
+  content: "";
+  display: block;
+  flex: 0 0 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0;
+  padding: 0;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%285.3%204.6%29%22%20d%3D%22M2.5%2015.1C2.083333%2015.1%201.729167%2014.954167%201.4375%2014.6625C1.145833%2014.370833%201%2014.016667%201%2013.6L1%201.4L0%201.4L0%200.7L3.7%200.7L3.7%200L9.7%200L9.7%200.7L13.400001%200.7L13.400001%201.4L12.400001%201.4L12.400001%2013.6C12.400001%2014.033334%2012.258334%2014.391666%2011.975%2014.675C11.691667%2014.958334%2011.333334%2015.1%2010.900001%2015.1L2.5%2015.1ZM11.7%201.4L1.7%201.4L1.7%2013.6C1.7%2013.833334%201.775%2014.025001%201.925%2014.175C2.075%2014.325%202.266667%2014.400001%202.5%2014.400001L10.900001%2014.400001C11.1%2014.400001%2011.283333%2014.316668%2011.45%2014.150001C11.616667%2013.983334%2011.7%2013.8%2011.7%2013.6L11.7%201.4ZM4.75%2012.400001L5.45%2012.400001L5.45%203.4L4.75%203.4L4.75%2012.400001ZM7.95%2012.400001L8.650001%2012.400001L8.650001%203.4L7.95%203.4L7.95%2012.400001Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%285.3%204.6%29%22%20d%3D%22M2.5%2015.1C2.083333%2015.1%201.729167%2014.954167%201.4375%2014.6625C1.145833%2014.370833%201%2014.016667%201%2013.6L1%201.4L0%201.4L0%200.7L3.7%200.7L3.7%200L9.7%200L9.7%200.7L13.400001%200.7L13.400001%201.4L12.400001%201.4L12.400001%2013.6C12.400001%2014.033334%2012.258334%2014.391666%2011.975%2014.675C11.691667%2014.958334%2011.333334%2015.1%2010.900001%2015.1L2.5%2015.1ZM11.7%201.4L1.7%201.4L1.7%2013.6C1.7%2013.833334%201.775%2014.025001%201.925%2014.175C2.075%2014.325%202.266667%2014.400001%202.5%2014.400001L10.900001%2014.400001C11.1%2014.400001%2011.283333%2014.316668%2011.45%2014.150001C11.616667%2013.983334%2011.7%2013.8%2011.7%2013.6L11.7%201.4ZM4.75%2012.400001L5.45%2012.400001L5.45%203.4L4.75%203.4L4.75%2012.400001ZM7.95%2012.400001L8.650001%2012.400001L8.650001%203.4L7.95%203.4L7.95%2012.400001Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+
+body .ashby-application-form-input-file-item-name:has(svg[viewBox="0 0 38 38"])::before,
+body .ashby-application-form-submit-button[aria-busy="true"]::after,
+body .ashby-application-form-submit-button:has(svg[viewBox="0 0 38 38"])::after,
+body .ashby-application-form-submit-button:has([role="progressbar"])::after,
+body .ashby-application-form-input-file-dropzone-upload[aria-busy="true"]::before,
+body .ashby-application-form-input-file-dropzone-upload:has(svg[viewBox="0 0 38 38"])::before,
+body .ashby-application-form-input-file-dropzone-upload:has([role="progressbar"])::before,
+body .ashby-application-form-autofill-input-base-layer button[aria-busy="true"]::before,
+body .ashby-application-form-autofill-input-base-layer button:has(svg[viewBox="0 0 38 38"])::before,
+body .ashby-application-form-autofill-input-base-layer button:has([role="progressbar"])::before,
+body .ashby-application-form-input-file-item-delete[aria-busy="true"]::before,
+body .ashby-application-form-input-file-item-delete:has(svg[viewBox="0 0 38 38"])::before,
+body .ashby-application-form-input-file-item-delete:has([role="progressbar"])::before {
+  display: none;
+}
+
+/* Hide only the observed Powered by Ashby footer and its reserved space. */
+footer:has(> a[aria-label="Learn more about Ashby"][href="https://www.ashbyhq.com"]) {
+  display: none !important;
+}
+
+/* Stable transparent popup outline; state rules below only change its color. */
+body .ashby-application-form-input-autocomplete-popup {
+  outline: 2px solid transparent !important;
+  outline-offset: 0px !important;
+}
+
+/* Select popup, including portalled menus and Ashby's active-result state. */
+body .ashby-application-form-input-autocomplete-popup {
+  --colorPrimary600: var(--kunin-white-50p);
+  --colorPrimary900: var(--kunin-slate);
+  --colorPrimaryShadow: transparent;
+  border-color: var(--kunin-white-50p) !important;
+  box-shadow: none !important;
+  transition: all 250ms ease-out !important;
+}
+
+body .ashby-application-form-input-autocomplete-popup:hover,
+body .ashby-application-form-input-autocomplete-popup:focus-within {
+  outline: 2px solid var(--kunin-focus-ring) !important;
+  outline-offset: 0px !important;
+}
+
+body .ashby-application-form-input-autocomplete-popup-empty,
+body .ashby-application-form-input-autocomplete-popup-loading {
+  color: var(--kunin-white-50p);
+  font: 400 1rem/1.2 var(--kunin-body-font);
+}
+
+/* Ashby's positive heading color otherwise matches our success background. */
+body .ashby-application-form-autofill-input-form-alert :is(h1, h2, h3, h4),
+body .ashby-application-form-success-container :is(h1, h2, h3, h4),
+body .ashby-application-form-failure-container :is(h1, h2, h3, h4),
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(h1, h2, h3, h4) {
+  display: block !important;
+  color: var(--kunin-white) !important;
+}
+
+/* Body copy and list content; retain the mono heading style. */
+body .ashby-application-form-autofill-input-form-alert,
+body .ashby-application-form-autofill-input-form-alert :is(p, ul, ol, li),
+body .ashby-application-form-failure-container :is(ul, ol, li),
+body .ashby-application-form-failure-container li p,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(ul, ol, li),
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] li p {
+  font-size: 1rem !important;
+  line-height: 1.2;
+}
+
+/* SVG loading indicators, including submit, file parsing and location lookup.
+   Keep gradient opacity and rotation; replace only the spinner color. */
+body svg[viewBox="0 0 38 38"] {
+  --colorNeutral500: var(--kunin-white);
+  fill: none !important;
+}
+body svg[viewBox="0 0 38 38"] circle {
+  fill: var(--kunin-white) !important;
+}
+
+/* Autofill also uses a CSS border spinner rather than an SVG. */
+body span[role="progressbar"][aria-label="Loading..."] {
+  color: var(--kunin-white) !important;
+  border-color: var(--kunin-white-20p) !important;
+  border-top-color: var(--kunin-white) !important;
+}
+
+/* Both arrows paint inside the same stationary 1rem square.
+   Moving the mask inside that square clips each arrow at the square's edges.
+   This needs no extra markup in Ashby's button. */
+body .ashby-application-form-submit-button {
+  position: relative;
+  padding-right: 3.25rem;
+}
+body .ashby-application-form-submit-button::before,
+body .ashby-application-form-submit-button::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 1.5rem;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  padding: 0;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%282.666667%204%29%22%20d%3D%22M6.666667%208L5.733334%207.033333L8.1%204.666667L0%204.666667L0%203.333333L8.1%203.333333L5.733334%200.966667L6.666667%200L10.666667%204L6.666667%208Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%282.666667%204%29%22%20d%3D%22M6.666667%208L5.733334%207.033333L8.1%204.666667L0%204.666667L0%203.333333L8.1%203.333333L5.733334%200.966667L6.666667%200L10.666667%204L6.666667%208Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  transform: translateY(-50%);
+  overflow: hidden;
+  clip-path: inset(0);
+  -webkit-mask-size: 1rem 1rem;
+  mask-size: 1rem 1rem;
+  -webkit-mask-origin: border-box;
+  mask-origin: border-box;
+  -webkit-mask-clip: border-box;
+  mask-clip: border-box;
+  pointer-events: none;
+  transition: mask-position 250ms ease-out, opacity 250ms ease-out !important;
+}
+/* Arrow 1 leaves its original position. */
+body .ashby-application-form-submit-button::after {
+  opacity: 1;
+  -webkit-mask-position: 0rem 50%;
+  mask-position: 0rem 50%;
+}
+/* Arrow 2 starts one icon-width left of the original position. */
+body .ashby-application-form-submit-button::before {
+  opacity: 0;
+  -webkit-mask-position: -1rem 50%;
+  mask-position: -1rem 50%;
+}
+body .ashby-application-form-submit-button:hover:not([disabled]):not([aria-disabled="true"]):not([aria-busy="true"])::after {
+  opacity: 0;
+  -webkit-mask-position: 1rem 50%;
+  mask-position: 1rem 50%;
+}
+body .ashby-application-form-submit-button:hover:not([disabled]):not([aria-disabled="true"]):not([aria-busy="true"])::before {
+  opacity: 1;
+  -webkit-mask-position: 0rem 50%;
+  mask-position: 0rem 50%;
+}
+
+/* Loading uses Ashby's spinner instead of either arrow. */
+body .ashby-application-form-submit-button[aria-busy="true"],
+body .ashby-application-form-submit-button:has(svg[viewBox="0 0 38 38"]),
+body .ashby-application-form-submit-button:has([role="progressbar"]) {
+  padding-right: 1.5rem;
+}
+body .ashby-application-form-submit-button[aria-busy="true"]::before,
+body .ashby-application-form-submit-button[aria-busy="true"]::after,
+body .ashby-application-form-submit-button:has(svg[viewBox="0 0 38 38"])::before,
+body .ashby-application-form-submit-button:has(svg[viewBox="0 0 38 38"])::after,
+body .ashby-application-form-submit-button:has([role="progressbar"])::before,
+body .ashby-application-form-submit-button:has([role="progressbar"])::after {
+  display: none;
+}
+
+/* Updated Figma success palette. Autofill body copy retains its 1rem size. */
+body .ashby-application-form-success-container,
+body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"] {
+  background: var(--kunin-gold-10) !important;
+  color: var(--kunin-brown) !important;
+  border: 0px solid transparent !important;
+}
+body .ashby-application-form-success-container :is(h1, h2, h3, h4),
+body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"] :is(h1, h2, h3, h4) {
+  color: var(--kunin-black) !important;
+}
+body .ashby-application-form-success-container :is(p, ul, ol, li),
+body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"] :is(p, ul, ol, li) {
+  color: var(--kunin-brown) !important;
+}
+body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"] {
+  border: 1px solid var(--kunin-white-40p) !important;
+  padding: 1.4375rem;
+}
+
+/* Submission-success panel from the revised Figma: compact mono text. */
+body .ashby-application-form-success-container {
+  padding: 1rem;
+  font: 400 0.75rem/1.2 var(--kunin-label-font);
+}
+body .ashby-application-form-success-container :is(h1, h2, h3, h4) {
+  display: flex !important;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0 0 0.5rem;
+  font: 400 0.75rem/1.2 var(--kunin-label-font);
+  letter-spacing: 0;
+}
+body .ashby-application-form-success-container :is(p, ul, ol, li) {
+  font: 400 0.75rem/1.2 var(--kunin-label-font);
+  letter-spacing: 0;
+}
+body .ashby-application-form-success-container :is(h1, h2, h3, h4) svg {
+  fill: var(--kunin-black);
+}
+
+body .ashby-application-form-success-container :is(h1, h2, h3, h4)::before {
+  content: "";
+  display: block;
+  flex: 0 0 1rem;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%282.566667%203.983333%29%22%20d%3D%22M3.8%208.016666L0%204.216667L0.95%203.266667L3.8%206.116666L9.916666%200L10.866666%200.95L3.8%208.016666Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%282.566667%203.983333%29%22%20d%3D%22M3.8%208.016666L0%204.216667L0.95%203.266667L3.8%206.116666L9.916666%200L10.866666%200.95L3.8%208.016666Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+body .ashby-application-form-success-container :is(h1, h2, h3, h4):has(svg)::before {
+  display: none;
+}
+
+/* Reserve the outline's actual pixel width inside the iframe viewport.
+   Inputs keep their normal border box; the 2px outline paints outside it. */
+body {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 2px !important;
+}
+body .ashby-application-form-section-container,
+body .ashby-application-form-field-entry {
+  overflow: visible;
+}
+
+/* Feedback messages are borderless. Keep the outer autofill banner border. */
+body .ashby-application-form-autofill-input-form-alert[data-highlight],
+body .ashby-application-form-success-container,
+body .ashby-application-form-failure-container,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+  border: 0px solid transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Main feedback panels: 40px visual inset in the updated Figma. */
+body .ashby-application-form-success-container,
+body .ashby-application-form-failure-container,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+  padding: 2.5rem;
+}
+body .ashby-application-form-success-container :is(h1, h2, h3, h4),
+body .ashby-application-form-failure-container :is(h1, h2, h3, h4),
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(h1, h2, h3, h4) {
+  margin: 0 0 0.5rem;
+  font: 400 1.5rem/1.2 var(--kunin-body-font);
+  letter-spacing: 0;
+  text-transform: none;
+}
+body .ashby-application-form-success-container :is(p, ul, ol, li),
+body .ashby-application-form-failure-container :is(p, ul, ol, li),
+body .ashby-application-form-failure-container li p,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(p, ul, ol, li),
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] li p {
+  font: 400 0.75rem/1.2 var(--kunin-label-font) !important;
+  letter-spacing: 0;
+}
+body .ashby-application-form-failure-container :is(ul, ol),
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(ul, ol) {
+  margin: 0;
+  padding-left: 0.75rem;
+}
+body .ashby-application-form-failure-container li,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] li {
+  margin: 0;
+}
+body .ashby-application-form-failure-container :is(a, button),
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(a, button) {
+  color: var(--kunin-gold-25) !important;
+  font: inherit;
+  text-decoration: underline;
+}
+
+/* Inline autofill feedback: compact mono title and message with 16px inset. */
+body .ashby-application-form-autofill-input-form-alert[data-highlight] {
+  padding: 1rem;
+}
+body .ashby-application-form-autofill-input-form-alert :is(h1, h2, h3, h4) {
+  margin: 0 0 0.5rem;
+  font: 400 0.75rem/1.2 var(--kunin-label-font);
+  letter-spacing: 0.0375rem;
+  text-transform: uppercase;
+}
+body .ashby-application-form-autofill-input-form-alert :is(p, ul, ol, li) {
+  font: 400 0.75rem/1.2 var(--kunin-label-font) !important;
+  letter-spacing: 0;
+}
+body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"] :is(h1, h2, h3, h4) {
+  display: flex !important;
+  align-items: center;
+  gap: 0.25rem;
+}
+body .ashby-application-form-success-container :is(h1, h2, h3, h4)::before {
+  flex-basis: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"] :is(h1, h2, h3, h4)::before {
+  content: "";
+  display: block;
+  flex: 0 0 1rem;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%282.566667%203.983333%29%22%20d%3D%22M3.8%208.016666L0%204.216667L0.95%203.266667L3.8%206.116666L9.916666%200L10.866666%200.95L3.8%208.016666Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22black%22%20transform%3D%22translate%282.566667%203.983333%29%22%20d%3D%22M3.8%208.016666L0%204.216667L0.95%203.266667L3.8%206.116666L9.916666%200L10.866666%200.95L3.8%208.016666Z%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"] :is(h1, h2, h3, h4):has(svg)::before {
+  display: none;
+}
+
+@media (max-width: 39.9375rem) {
+  body .ashby-application-form-success-container,
+  body .ashby-application-form-failure-container,
+  body .ashby-application-form-container > [role="alert"][data-highlight="negative"] {
+    padding: 1.5rem;
+  }
+}
+
+/* Error-message field links retain their underline and brighten on hover. */
+body .ashby-application-form-failure-container :is(a, button),
+body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"] :is(a, button),
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(a, button) {
+  transition: color 250ms ease-out !important;
+}
+body .ashby-application-form-failure-container :is(a, button):hover,
+body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"] :is(a, button):hover,
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(a, button):hover {
+  color: var(--kunin-gold-20) !important;
+  transition: color 250ms ease-out !important;
+}
+
+/* Ashby rejects the SVG stop-color property in uploaded CSS. Its spinner
+   rules already consume these inherited theme variables, so point every
+   button-spinner variant at currentColor to match the rendered label. */
+body button svg[viewBox="0 0 38 38"] {
+  --colorNeutral000: currentColor;
+  --colorNeutral500: currentColor;
+  --colorPrimary600: currentColor;
+  --colorNegative600: currentColor;
+}
+body button svg[viewBox="0 0 38 38"] circle {
+  fill: currentColor !important;
+}
+body button span[role="progressbar"][aria-label="Loading..."] {
+  color: inherit !important;
+  border-color: transparent !important;
+  border-top-color: currentColor !important;
+}
+
+/* Keep the white radio ring through hover, focus, active and repeat clicks.
+   The native checked state controls the fill, including a cleared selection. */
+body .ashby-application-form-input-radio-group-option > span:has(> input[type="radio"]) {
+  border: 2px solid var(--kunin-white) !important;
+  background-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  user-select: none;
+}
+body .ashby-application-form-input-radio-group-option > span:has(> input[type="radio"]) > span {
+  background-color: transparent !important;
+}
+body .ashby-application-form-input-radio-group-option > span:has(> input[type="radio"]:checked),
+body .ashby-application-form-input-radio-group-option > span:has(> input[type="radio"]:checked) > span {
+  background-color: var(--kunin-white) !important;
+}
+body .ashby-application-form-input-radio-group-option-radio {
+  opacity: 0 !important;
+}
+body .ashby-application-form-input-radio-group-option-label {
+  user-select: none;
+}
+
+/* Figma material-symbols:arrow-drop-down, exact vector from node 2:163.
+   A white triangle in a 1rem box, 1.5rem from the outer right edge.
+   Paint on the field so the existing autocomplete toggle stays clickable. */
+body .ashby-application-form-input-autocomplete,
+body .ashby-application-form-input-dropdown-select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20fill%3D%22white%22%20transform%3D%22translate%284.666667%206.666667%29%22%20d%3D%22M3.333333%203.333333L0.000000%200.000000L6.666666%200.000000L3.333333%203.333333Z%22%2F%3E%3C%2Fsvg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-size: 1rem 1rem !important;
+  background-origin: border-box !important;
+  background-position: right 1.5rem center !important;
+  padding-right: 3.5rem;
+}
+
+body .ashby-application-form-input-autocomplete + button {
+  width: 4rem;
+  padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body .ashby-application-form-input-autocomplete + button svg,
+body .ashby-application-form-input-dropdown-icon {
+  display: none !important;
+}
+
+/* Separate the floating list from the field's outside focus outline.
+   Ashby's positioning middleware overlaps the field by 6px. Compensate for
+   that fixed offset, then add a 0.5rem visual gap. Keep its inline transform. */
+body div[role="listbox"]:has(> .ashby-application-form-input-autocomplete-popup) {
+  translate: 0 calc(0.5rem + 6px);
+}
+
+/* The input owns the focus ring; the results list has one quiet border. */
+body .ashby-application-form-input-autocomplete-popup,
+body .ashby-application-form-input-autocomplete-popup:hover,
+body .ashby-application-form-input-autocomplete-popup:focus-within {
+  box-sizing: border-box;
+  border: 1px solid var(--kunin-white-50p) !important;
+  outline: none !important;
+  box-shadow: none !important;
+  max-height: max(0rem, calc(var(--autocomplete-max-height, 20rem) - 0.5rem - 6px));
+}
