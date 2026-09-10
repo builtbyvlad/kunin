@@ -3,7 +3,7 @@
    The existing Webflow embed can stay as it is.
    Fonts must load inside the iframe; parent-page fonts are not inherited.
    Uses Ashby's public CSS hooks and verified field data attributes.
-   v12: Ashby-safe spinner colors; select and earlier state fixes retained.
+   v13: 0.875rem feedback body copy; earlier state fixes retained.
    No ID selectors or nested bare state pseudo-classes.
    Disabled, pressed, loading and field-error treatments
    extend the supplied default/hover/filled/error/success design states.
@@ -90,6 +90,7 @@ body {
   font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
 
 /* Ashby sets its page background from --colorAppBackground above. */
 body {
@@ -1512,4 +1513,17 @@ body .ashby-application-form-input-autocomplete-popup:focus-within {
   outline: none !important;
   box-shadow: none !important;
   max-height: max(0rem, calc(var(--autocomplete-max-height, 20rem) - 0.5rem - 6px));
+}
+
+/* Feedback body copy is 14px at the default 16px root on every breakpoint.
+   Heading sizes remain controlled by the dedicated heading rules above. */
+body .ashby-application-form-failure-container,
+body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"],
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"],
+body .ashby-application-form-failure-container :is(p, ul, ol, li, a, button),
+body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"] :is(p, ul, ol, li, a, button),
+body .ashby-application-form-container > [role="alert"][data-highlight="negative"] :is(p, ul, ol, li, a, button),
+body .ashby-application-form-success-container p,
+body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"] p {
+  font-size: 0.875rem !important;
 }
