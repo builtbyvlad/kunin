@@ -75,6 +75,22 @@
   --checkboxAndRadioCheckDim: 0.5rem;
 }
 
+html { font-size: 1rem; }
+@media screen and (max-width:1920px) { html { font-size: 1rem; } }
+@media screen and (max-width:1440px) { html { font-size: calc(0.1982182628062361rem + 0.8908685968819599vw); } }
+@media screen and (max-width:991px) { html { font-size: 1rem; } }
+@media screen and (max-width:420px) { html { font-size: calc(-0.04464285714285754rem + 4.285714285714287vw); } }
+@media screen and (max-width:320px) { html { font-size: calc(0.0625rem + 3.75vw); } }
+@media screen and (max-width:240px) { html { font-size: 0.625rem; } }
+
+  /* Make text look crisper and more legible in all browsers */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
 /* Ashby sets its page background from --colorAppBackground above. */
 body {
   margin: 0 !important;
