@@ -3,7 +3,8 @@
    The existing Webflow embed can stay as it is.
    Fonts must load inside the iframe; parent-page fonts are not inherited.
    Uses Ashby's public CSS hooks and verified field data attributes.
-   inline warning toasts and close-button states; earlier fixes retained.
+   v19: full-width warning toast at the bottom of the iframe document;
+   error-panel typography and earlier fixes retained.
    No ID selectors or nested bare state pseudo-classes.
    Disabled, pressed, loading and field-error treatments
    extend the supplied default/hover/filled/error/success design states.
@@ -1323,6 +1324,7 @@ body .ashby-application-form-success-container :is(h1, h2, h3, h4):has(svg)::bef
    Inputs keep their normal border box; the 2px outline paints outside it. */
 body {
   box-sizing: border-box;
+  position: relative;
   width: 100%;
   padding: 2px !important;
 }
@@ -1593,16 +1595,16 @@ body [data-highlight="warning"] > button svg {
 }
 
 /* Ashby's warning toast is wrapped in a fixed region and an animation layer.
-   Move that exact wrapper structure into document flow and let it use the
-   available form width. Autofill warnings do not contain a direct button, so
-   these structural selectors affect the toast only. */
+   Anchor that exact wrapper structure to the bottom of the full iframe body
+   and stretch it across the available width. Autofill warnings do not contain
+   a direct button, so these structural selectors affect the toast only. */
 body div:has(> div > [data-highlight="warning"] > button) {
   box-sizing: border-box;
-  position: static !important;
-  inset: auto !important;
-  z-index: auto !important;
+  position: absolute !important;
+  inset: auto 0 0 0 !important;
+  z-index: 10 !important;
   display: block;
-  width: 100% !important;
+  width: auto !important;
   max-width: none !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -1620,6 +1622,23 @@ body [data-highlight="warning"]:has(> button) {
   position: relative !important;
   inset: auto !important;
   z-index: auto !important;
+  padding: 2.5rem !important;
+}
+
+/* Match the main form-error panel's heading and message treatment. */
+body [data-highlight="warning"]:has(> button) > :is(h1, h2, h3, h4) {
+  margin: 0 0 0.5rem !important;
+  color: var(--kunin-white) !important;
+  font: 400 1.5rem/1.2 var(--kunin-body-font) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+body [data-highlight="warning"]:has(> button) > p {
+  margin: 0 !important;
+  color: var(--kunin-white) !important;
+  font: 400 0.875rem/1.2 var(--kunin-label-font) !important;
+  letter-spacing: 0 !important;
 }
 
 /* Close button: neutral states replace Ashby's theme-blue treatment. */
@@ -1662,4 +1681,10 @@ body [data-highlight="warning"]:has(> button) > button:hover svg,
 body [data-highlight="warning"]:has(> button) > button:focus svg,
 body [data-highlight="warning"]:has(> button) > button:active svg {
   fill: currentColor !important;
+}
+
+@media (max-width: 39.9375rem) {
+  body [data-highlight="warning"]:has(> button) {
+    padding: 1.5rem !important;
+  }
 }
