@@ -3,7 +3,7 @@
    The existing Webflow embed can stay as it is.
    Fonts must load inside the iframe; parent-page fonts are not inherited.
    Uses Ashby's public CSS hooks and verified field data attributes.
-   v14: nested error-alert typography fix; earlier state fixes retained.
+   v16: responsive root font scale and font smoothing; earlier fixes retained.
    No ID selectors or nested bare state pseudo-classes.
    Disabled, pressed, loading and field-error treatments
    extend the supplied default/hover/filled/error/success design states.
@@ -11,6 +11,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400&family=STIX+Two+Text:wght@400;500;600&display=swap");
 
 :root {
+  font-size: 1rem;
+
   /* Names mirror the site's palette, namespaced for the Ashby iframe. */
   --kunin-black: #000000;
   --kunin-off-black: #111417;
@@ -75,23 +77,29 @@
   --checkboxAndRadioCheckDim: 0.5rem;
 }
 
-
-html { font-size: 1rem; }
-@media screen and (max-width:1920px) { html { font-size: 1rem; } }
-@media screen and (max-width:1440px) { html { font-size: calc(0.1982182628062361rem + 0.8908685968819599vw); } }
-@media screen and (max-width:991px) { html { font-size: 1rem; } }
-@media screen and (max-width:420px) { html { font-size: calc(-0.04464285714285754rem + 4.285714285714287vw); } }
-@media screen and (max-width:320px) { html { font-size: calc(0.0625rem + 3.75vw); } }
-@media screen and (max-width:240px) { html { font-size: 0.625rem; } }
-
-  /* Make text look crisper and more legible in all browsers */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+@media screen and (max-width: 1920px) {
+  :root { font-size: 1rem; }
 }
 
+@media screen and (max-width: 1440px) {
+  :root { font-size: calc(0.1982182628062361rem + 0.8908685968819599vw); }
+}
+
+@media screen and (max-width: 991px) {
+  :root { font-size: 1rem; }
+}
+
+@media screen and (max-width: 420px) {
+  :root { font-size: calc(-0.04464285714285754rem + 4.285714285714287vw); }
+}
+
+@media screen and (max-width: 320px) {
+  :root { font-size: calc(0.0625rem + 3.75vw); }
+}
+
+@media screen and (max-width: 240px) {
+  :root { font-size: 0.625rem; }
+}
 
 /* Ashby sets its page background from --colorAppBackground above. */
 body {
@@ -100,6 +108,9 @@ body {
   background: var(--kunin-background) !important;
   color: var(--kunin-text);
   color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body .ashby-application-form-container,
@@ -1529,5 +1540,25 @@ body .ashby-application-form-autofill-input-form-alert[data-highlight="negative"
 body .ashby-application-form-container [role="alert"][data-highlight="negative"] li p,
 body .ashby-application-form-success-container p,
 body .ashby-application-form-autofill-input-form-alert[data-highlight="positive"] p {
+  font-size: 0.875rem !important;
+}
+
+/* Ashby reports file-size and parsing failures as "warning". Present that
+   state as an error so it matches the main error panel. */
+body .ashby-application-form-autofill-input-form-alert[data-highlight="warning"] {
+  background: var(--kunin-error-surface) !important;
+  border: 0px solid transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: var(--kunin-white) !important;
+  font-size: 0.875rem !important;
+}
+
+body .ashby-application-form-autofill-input-form-alert[data-highlight="warning"] :is(h1, h2, h3, h4, p, ul, ol, li, a, button) {
+  color: var(--kunin-white) !important;
+}
+
+body .ashby-application-form-autofill-input-form-alert[data-highlight="warning"] :is(p, ul, ol, li, a, button),
+body .ashby-application-form-autofill-input-form-alert[data-highlight="warning"] li p {
   font-size: 0.875rem !important;
 }
