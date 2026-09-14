@@ -3,7 +3,7 @@
    The existing Webflow embed can stay as it is.
    Fonts must load inside the iframe; parent-page fonts are not inherited.
    Uses Ashby's public CSS hooks and verified field data attributes.
-   v16: responsive root font scale and font smoothing; earlier fixes retained.
+   inline warning toasts and close-button states; earlier fixes retained.
    No ID selectors or nested bare state pseudo-classes.
    Disabled, pressed, loading and field-error treatments
    extend the supplied default/hover/filled/error/success design states.
@@ -1561,4 +1561,105 @@ body .ashby-application-form-autofill-input-form-alert[data-highlight="warning"]
 body .ashby-application-form-autofill-input-form-alert[data-highlight="warning"] :is(p, ul, ol, li, a, button),
 body .ashby-application-form-autofill-input-form-alert[data-highlight="warning"] li p {
   font-size: 0.875rem !important;
+}
+
+/* Warning toasts are portalled outside the public form container and expose
+   no public Ashby class. Their stable data-highlight state is shared with the
+   autofill warning, so apply the same error palette to every warning surface. */
+body [data-highlight="warning"] {
+  background: var(--kunin-error-surface) !important;
+  border: 0px solid transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: var(--kunin-white) !important;
+}
+
+body [data-highlight="warning"] :is(h1, h2, h3, h4, p, ul, ol, li, a, button) {
+  color: var(--kunin-white) !important;
+}
+
+body [data-highlight="warning"] p {
+  font-size: 0.875rem !important;
+}
+
+body [data-highlight="warning"] > button {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body [data-highlight="warning"] > button svg {
+  fill: currentColor !important;
+}
+
+/* Ashby's warning toast is wrapped in a fixed region and an animation layer.
+   Move that exact wrapper structure into document flow and let it use the
+   available form width. Autofill warnings do not contain a direct button, so
+   these structural selectors affect the toast only. */
+body div:has(> div > [data-highlight="warning"] > button) {
+  box-sizing: border-box;
+  position: static !important;
+  inset: auto !important;
+  z-index: auto !important;
+  display: block;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body div:has(> [data-highlight="warning"] > button),
+body [data-highlight="warning"]:has(> button) {
+  box-sizing: border-box;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+body [data-highlight="warning"]:has(> button) {
+  position: relative !important;
+  inset: auto !important;
+  z-index: auto !important;
+}
+
+/* Close button: neutral states replace Ashby's theme-blue treatment. */
+body [data-highlight="warning"]:has(> button) > button,
+body [data-highlight="warning"]:has(> button) > button:focus,
+body [data-highlight="warning"]:has(> button) > button:focus-visible {
+  border: 0 !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--kunin-white) !important;
+  transition: background-color 250ms ease-out, color 250ms ease-out, opacity 250ms ease-out !important;
+}
+
+body [data-highlight="warning"]:has(> button) > button:hover {
+  border: 0 !important;
+  outline: none !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: none !important;
+  color: var(--kunin-white) !important;
+}
+
+body [data-highlight="warning"]:has(> button) > button:active {
+  border: 0 !important;
+  outline: none !important;
+  background: var(--kunin-white-20p) !important;
+  box-shadow: none !important;
+  color: var(--kunin-white) !important;
+}
+
+body [data-highlight="warning"]:has(> button) > button[disabled],
+body [data-highlight="warning"]:has(> button) > button[aria-disabled="true"] {
+  background: transparent !important;
+  color: var(--kunin-white) !important;
+  opacity: 0.4;
+}
+
+body [data-highlight="warning"]:has(> button) > button svg,
+body [data-highlight="warning"]:has(> button) > button:hover svg,
+body [data-highlight="warning"]:has(> button) > button:focus svg,
+body [data-highlight="warning"]:has(> button) > button:active svg {
+  fill: currentColor !important;
 }
